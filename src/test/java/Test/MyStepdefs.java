@@ -1,6 +1,7 @@
 package Test;
 
 
+import io.cucumber.java.After;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.ru.И;
 import io.cucumber.java.ru.Пусть;
@@ -18,24 +19,24 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.Thread.sleep;
 
 public class MyStepdefs {
+
     static WebDriver driver;
 
     @Пусть("открыт ресурс авито")
     public void открытРесурсАвито() {
-
         System.setProperty("webdriver.chrome.driver", "src/test/resources/webdriver/chromedriver");
-            // Драйвер для Windows
-            //  System.setProperty("webdriver.chrome.driver","src/test/resources/webdriver/chromedriver.exe");
+        // Драйвер для Windows
+        //  System.setProperty("webdriver.chrome.driver","src/test/resources/webdriver/chromedriver.exe");
 
-            driver = new ChromeDriver();
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-            driver.get("https://www.avito.ru/");
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get("https://www.avito.ru/");
 
     }
 
-       @ParameterType(".*")
-        public CategorySelected categorySelected(String category){
-            return CategorySelected.valueOf(category);
+    @ParameterType(".*")
+    public CategorySelected categorySelected(String category){
+        return CategorySelected.valueOf(category);
         }
 
         @И("в выпадающем списке категорий выбрана {categorySelected}")
@@ -49,6 +50,7 @@ public class MyStepdefs {
 
         @И("в поле поиска введено значение  {word}")
         public void вПолеПоискаВведеноЗначение(String sendKeys) {
+
             String printer = "[type=\"text\"][data-marker=\"search-form/suggest\"]";
             WebElement search = driver.findElement(By.cssSelector(printer));
             search.sendKeys(sendKeys);
@@ -58,6 +60,7 @@ public class MyStepdefs {
 
         @Тогда("кликнуть по выпадающему списку региона")
         public void кликнутьПоВыпадающемуСпискуРегиона() {
+
             String searchForm = "[data-marker=\"search-form/region\"]";
             WebElement param = driver.findElement(By.cssSelector(searchForm));
             param.click();
@@ -66,6 +69,7 @@ public class MyStepdefs {
 
         @Тогда("в поле регион введено значение {word}")
         public void вПолеРегионВведеноЗначениеВладивосток(String sendKeys) throws InterruptedException {
+
             String city = "[placeholder=\"Город, регион или Россия\"]";
             WebElement params3 = driver.findElement(By.cssSelector(city));
             params3.sendKeys(sendKeys);
@@ -80,6 +84,7 @@ public class MyStepdefs {
 
         @И("нажата кнопка показать объявления")
         public void нажатаКнопкаПоказатьОбъявления() {
+
             String cssSelector = "[data-marker=\"popup-location/save-button\"]";
             driver.findElement(By.cssSelector(cssSelector)).click();
 
@@ -88,6 +93,7 @@ public class MyStepdefs {
 
         @Тогда("открылась страница по запросу {word}")
         public void открыласьСтраницаПоЗапросуПринтер(String result) {
+
             String cssSelector = "[data-marker=\"page-title/text\"]";
             String title= driver.findElement(By.cssSelector(cssSelector)).getText();
             if (title.contains("«" + result + "»")){
@@ -101,6 +107,7 @@ public class MyStepdefs {
 
         @И("активирован чек бокс только с фотографией")
         public void активированЧекБоксТолькоСФотографией() {
+
             String xpath = "//*[text()=\"только с фото\"]";
             WebElement checkbox = driver.findElement(By.xpath(xpath));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", checkbox);
@@ -116,15 +123,15 @@ public class MyStepdefs {
         }
         @ParameterType(".*")
         public SortPrice sortPrice(String sort){
-            return SortPrice.valueOf(sort);
+
+        return SortPrice.valueOf(sort);
         }
+
         @И("в выпадающем списке сортировка выбрано значение {sortPrice}")
         public void вВыпадающемСпискеСортировкаВыбраноЗначениеДороже(SortPrice sortPrice ) {
             String xpath = "//div[2]/select";
             Select price = new Select(driver.findElement(By.xpath(xpath)));
             price.selectByVisibleText(sortPrice.getValue());
-
-
 
         }
 
@@ -150,6 +157,12 @@ public class MyStepdefs {
 
         }
 
+        @After
+        public void quitWeb() {
+
+        driver.quit();
+
+    }
 
 }
 
